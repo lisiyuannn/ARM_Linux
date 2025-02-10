@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/demo.dir/add.c.o CMakeFiles/demo.dir/div.c.o CMakeFiles/demo.dir/main.c.o CMakeFiles/demo.dir/mul.c.o CMakeFiles/demo.dir/sub.c.o -o /home/siyuan/ARM_Linux/cmake_test/test1/demo 

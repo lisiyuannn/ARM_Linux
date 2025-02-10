@@ -1,0 +1,2 @@
+/usr/bin/ar qc /home/siyuan/ARM_Linux/cmake_test/test3/lib/libstalib.a CMakeFiles/stalib.dir/src/mul.c.o CMakeFiles/stalib.dir/src/div.c.o
+/usr/bin/ranlib /home/siyuan/ARM_Linux/cmake_test/test3/lib/libstalib.a

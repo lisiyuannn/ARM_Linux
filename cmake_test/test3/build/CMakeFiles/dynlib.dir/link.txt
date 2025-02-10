@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC -shared -Wl,-soname,libdynlib.so -o /home/siyuan/ARM_Linux/cmake_test/test3/lib/libdynlib.so CMakeFiles/dynlib.dir/src/add.c.o CMakeFiles/dynlib.dir/src/sub.c.o 

@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/demo.dir/main.c.o -o /home/siyuan/ARM_Linux/cmake_test/test3/demo  -Wl,-rpath,/home/siyuan/ARM_Linux/cmake_test/test3/lib /home/siyuan/ARM_Linux/cmake_test/test3/lib/libdynlib.so /home/siyuan/ARM_Linux/cmake_test/test3/lib/libstalib.a 

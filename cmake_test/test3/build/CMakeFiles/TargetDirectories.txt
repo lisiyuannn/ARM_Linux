@@ -1,0 +1,5 @@
+/home/siyuan/ARM_Linux/cmake_test/test3/build/CMakeFiles/dynlib.dir
+/home/siyuan/ARM_Linux/cmake_test/test3/build/CMakeFiles/stalib.dir
+/home/siyuan/ARM_Linux/cmake_test/test3/build/CMakeFiles/demo.dir
+/home/siyuan/ARM_Linux/cmake_test/test3/build/CMakeFiles/edit_cache.dir
+/home/siyuan/ARM_Linux/cmake_test/test3/build/CMakeFiles/rebuild_cache.dir
