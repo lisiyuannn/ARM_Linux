@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/demo.dir/file_creat.c.o -o /home/siyuan/ARM_Linux/linux_app/file_time/demo 

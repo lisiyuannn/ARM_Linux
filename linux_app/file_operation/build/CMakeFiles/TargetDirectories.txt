@@ -1,0 +1,3 @@
+/home/siyuan/ARM_Linux/linux_app/file_time/build/CMakeFiles/demo.dir
+/home/siyuan/ARM_Linux/linux_app/file_time/build/CMakeFiles/edit_cache.dir
+/home/siyuan/ARM_Linux/linux_app/file_time/build/CMakeFiles/rebuild_cache.dir
