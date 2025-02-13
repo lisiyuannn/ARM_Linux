@@ -214,3 +214,80 @@ GDB主要完成下面三个方面的功能
     //阻塞该进程，直到其某个子进程退出
     pid_t wait(int *statu);
 ```
+### 进程的退出
+* pid_t wait(int *status); 成功返回子进程id，出错返回-1。等待子进程退出并回收，防止孤儿进程产生。  
+* pid_t waitpid(pit_t pid, int *status, int options); 成功返回子进程id，出错返回-1。wait函数的非阻塞版本。opitions参数可以指定是否阻塞等待，参数status可以获得子进程结束的状态。
+## 打印错误信息
+* errno：errno 是一个全局变量，定义在 <errno.h> 头文件中。当系统调用或库函数执行出错时，会将一个错误码赋值给 errno，不同的错误码代表不同的错误类型。
+```c
+#include <stdio.h>
+#include <errno.h>
+#include <fcntl.h>
+
+int main() {
+    int fd = open("nonexistent_file.txt", O_RDONLY);
+    if (fd == -1) {
+        printf("Error opening file, errno: %d\n", errno);
+    }
+    return 0;
+}
+```
+
+* perror 函数会根据 errno 的值，将对应的错误信息输出到标准错误输出 stderr。参数 s 是一个自定义的字符串，会在错误信息前打印。
+```c
+#include <stdio.h>
+#include <fcntl.h>
+
+int main() {
+    int fd = open("nonexistent_file.txt", O_RDONLY);
+    if (fd == -1) {
+        perror("Failed to open file");
+    }
+    return 0;
+}
+```
+
+* char *strerror(int errnum); strerror 函数接受一个错误码作为参数，返回一个指向描述该错误信息的字符串的指针。与 perror 不同，strerror 不会直接输出错误信息，而是返回错误信息的字符串，方便用户自定义输出格式。
+```c
+#include <stdio.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <string.h>
+
+int main() {
+    int fd = open("nonexistent_file.txt", O_RDONLY);
+    if (fd == -1) {
+        printf("Error opening file: %s\n", strerror(errno));
+    }
+    return 0;
+}
+```
+
+## 管道
+### 无名管道
+* 用于父进程和子进程之间通信
+```c
+//头文件
+#include <unistd.h>
+#include <sys/types.h>
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+//创建管道 pipefd[1]为写端文件描述符
+int pipe(int pipefd[2]);    //成功返回0，否则返回-1
+//写数据
+write(pipefd[1], message, strlen(message));
+//读数据
+read(pipefd[0], buffer, sizeof(buffer));
+```
+
+### 有名管道
+* 用于任意两个进程之间进行通信
+```c
+#include <sys/stat.h>
+
+int mkfifo(const char *pathname, mode_t mode);
+//pathname为FIFO文件名
+//mode为文件操作属性，例如read，write等，此外还有是否阻塞的标志O_NONBLOCK，使用该参数后如果打开失败，则不阻塞，立即返回
+```
