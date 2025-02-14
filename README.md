@@ -291,3 +291,52 @@ int mkfifo(const char *pathname, mode_t mode);
 //pathname为FIFO文件名
 //mode为文件操作属性，例如read，write等，此外还有是否阻塞的标志O_NONBLOCK，使用该参数后如果打开失败，则不阻塞，立即返回
 ```
+
+## 信号
+* 注册信号处理函数：void (*signal(int sig, void (*func)(int)))(int);
+* ubuntu发送信号至零：kill
+
+## 共享内存
+* 被多个进程共同使用的内存，使用简单，访问快
+* 步骤：
+> 创建共享内存：int shmget(key_t key, int size, int shmflg)，成功返回共享内存标识符，失败返回-1  
+> 映射共享内存：int shmat(int shmid, char *shmaddr, intflg)，成功返回共享内存映射到进程中的地址，失败返回-1  
+> 解除地址映射：int shmdt(char* shmaddr)
+```c
+    //头文件
+    #include <sys/shm.h>
+    #include <sys/ipc.h>
+```
+
+## 消息队列
+> 键值
+```c
+    #include <sys/types.h>
+    #include <sys/ipc.h>
+    key_t ftok(char* pathname, char proj);
+    //pathname为带路径的文件名，proj为项目名称，不为0即可
+```
+> 打开/创建消息队列
+```c
+    #include <sys/types.h>
+    #include <sys/ipc.h>
+
+    #include <sys/msg.h>
+    int msgget(key_t key, int msgflg);
+    //返回消息队列描述字，标志位
+```
+> 向队列中发送消息和接收消息
+```c
+    int msgsnd(int msqid, struct msgbuf* msgp, int msgsz, int msgflag);
+    int msgrcv(int msqid, struct msgbuf* msgp, int msgsz, long mtype, int msgflag);
+    //成功读取消息后，这条消息将会被删除
+```
+> 消息格式
+```c
+    struct msgbuf
+    {
+        long mtype; //消息类型，>0
+        char mtext[1];  //消息数据的首地址
+
+    }
+```
