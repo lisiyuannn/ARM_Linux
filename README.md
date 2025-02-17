@@ -340,3 +340,39 @@ int mkfifo(const char *pathname, mode_t mode);
 
     }
 ```
+> 删除消息队列
+```c
+    msgctl(int msqid, flag, NULL);
+    //flag为IPC_RMID表示从系统消息队列中移除
+```
+
+## 信号量
+> 用途是保护临界资源，进程可以根据它判断是否可以访问某些共享资源，除了用于访问控制外，还可以用于进程同步。
+### 二值信号量
+> 信号量的值只能为0和1
+### 技术信号量
+> 信号量为任意非负值
+> 创建信号量
+```c
+    #include <sys/sem.h>
+    int semget(key_t key, int nsems, int semflg);
+    //key由ftok生成，nsems为信号量个数，semflg为标志位，类似消息队列，返回semid
+```
+> 信号量的操作
+P 操作（Wait 操作）：  
+如果信号量的值大于 0，则将其减 1，表示申请到一个资源。  
+如果信号量的值为 0，则进程阻塞，直到信号量的值大于 0。  
+V 操作（Signal 操作）：  
+将信号量的值加 1，表示释放一个资源。  
+如果有进程在等待该信号量，则唤醒其中一个进程。  
+```c
+    int semop(int semid, struct sembuf *sops, size_t nsops);
+    //semid由semget()返回，
+```
+> 步骤
+1. ftok创建key  
+2. 创建信号量semget，指定信号量的个数，编号从0开始
+3. 初始化信号量semctl，指定信号量的值
+3. 进程获取或释放信号量
+
+## 线程
