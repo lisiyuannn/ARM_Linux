@@ -376,3 +376,111 @@ V 操作（Signal 操作）：
 3. 进程获取或释放信号量
 
 ## 线程
+
+## 线程
+### 线程标识
+> 不同线程拥有自己的唯一标识
+> 线程标识只在他所属的进程环境中有效
+> 线程标识是pthread_t数据类型
+```c
+    #include <pthread.h>
+    int pthread_equal(pthread_t, pthread_t);
+    //相等返回非零，不同返回0
+    pthread_t pthread_self(void);
+    //返回调用线程的线程ID
+```
+* 线程创建
+```c
+    #include <pthread.h>
+    int pthread_create(pthread_t *thread, const pthread_attr_t *attr,
+                          void *(*start_routine) (void *), void *arg);
+                          //成功返回0，否侧返回错误编号
+    //线程标识符指针，线程属性指针，线程运行函数的函数指针，传递给线程运行函数的参数
+    //新的线程从函数指针处开始执行，不能保证线程的运行顺序
+```
+* 线程终止
+主动终止：
+> 线程的执行函数中调用returen语句
+> 调用pthread_exit()
+被动终止：
+> 线程可以被同一进程的其他线程取消，其他线程调用pthread_cancel(pthid)
+```c
+     #include <pthread.h>
+    int pthread_cancel(pthread_t thread);
+```
+> 只有调用了pthread_join()函数后，等待结束的子线程结束后才会回收资源
+### 线程清理和控制函数
+```c
+void clean_func(void * arg)
+{
+    char *s = (char*)arg;
+    printf("clean func: %s\n", s);
+}
+
+void *func(void* arg)
+{
+	Race_Arg *ra_arg = (Race_Arg *)arg;
+    int execute = ra_arg->start;
+
+    //压入线程清理函数
+    pthread_cleanup_push(clean_func, "first clean func");
+    pthread_cleanup_push(clean_func, "second clean func");
+
+	for(int i = ra_arg->start; i <= ra_arg->end; i++)
+	{
+		printf("%lx %s thread : %d\n", pthread_self(), ra_arg->name, i);
+		usleep(ra_arg->time);
+	}
+
+    pthread_cleanup_pop(execute);
+    pthread_cleanup_pop(execute);
+    //push和pop需要成对出现
+    //清理函数在线程结束之前调用
+    //execute为0时，不执行清理函数
+    //先压入的后执行
+
+	return (void*)ra_arg;
+}
+```
+### 线程属性初始化和销毁
+* 分离属性
+```c
+//创建线程属性
+	pthread_attr_t attr;
+	//初始化线程属性
+	pthread_attr_init(&attr);
+    //更改线程属性
+	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+	//获取线程属性
+	out_state(&attr);
+	//创建线程
+	err = pthread_create(&detached_th, &attr, start_func, (void*)90);
+	if(err != 0)
+	{
+		perror("detached_th create");
+		exit(1);
+	}
+    //输出线程分离属性函数
+    void out_state(pthread_attr_t *attr)
+    {
+        int state;
+        if(pthread_attr_getdetachstate(attr, &state) != 0)
+        {
+            perror("getdetachstate");
+        }
+        else
+        {
+            if(state == PTHREAD_CREATE_JOINABLE)
+            {
+                printf("joinable state!\n");
+            }
+            else if(state == PTHREAD_CREATE_DETACHED)
+            {
+                printf("detached state!\n");
+            }
+            else printf("error state!\n");
+        }
+    }
+```
+
+### 线程同步
