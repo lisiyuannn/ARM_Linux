@@ -446,4 +446,41 @@ void *func(void* arg)
     }
 ```
 
+* 读写锁
+线程使用互斥锁缺乏读并发性，适用于读多，写少的场景
+```c
+    //读写锁数据类型
+    pthread_rwlock_t rwlock;
+    // 初始化读写锁
+    pthread_rwlock_init(&rwlock, NULL);
+    // 销毁读写锁
+    pthread_rwlock_destroy(&rwlock);
+```
+写正在读的文章会失败，写正在写的文章会失败，读正在写的文章会阻塞，读读成功
+
 ### 线程同步
+* 条件变量
+1. 条件变量和互斥锁定义
+1. 条件变量和互斥锁初始化
+1. 线程利用条件变量进入等待队列
+1. 另一线程唤醒处于等待队列里的线程
+1. 使用完成后销毁互斥锁和条件变量
+
+* 信号量
+```c
+    #include <semaphore.h>
+    #include <pthread.h>
+    #include <stdio.h>
+    //定义信号量
+    sem_t sem;
+    //初始化信号量
+    int sem_init(sem_t *sem, int pshared, unsigned int value);
+    //pshared：表示信号量的共享方式，0 表示信号量在同一进程的多个线程间共享，非 0 表示信号量可以在不同进程间共享。
+    //value：信号量的初始值。
+    //等待信号量，-1操作
+    sem_wait(sem_t *sem);
+    //释放信号量，+1操作
+    sem_post(sem_t *sem);
+    //摧毁信号量
+    sem_destroy(sem_t *sem);
+```
