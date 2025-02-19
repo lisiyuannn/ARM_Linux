@@ -85,6 +85,11 @@ int main(int argc, char* argv[])
 		SOCK_STREAM: tcp协议
 	 */
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	if(sockfd < 0)
+	{
+		perror("socket");
+		exit(1);
+	}
 
 	/*
 		步骤2：填充IP地址结构体
