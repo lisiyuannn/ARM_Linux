@@ -484,3 +484,117 @@ void *func(void* arg)
 ```
 
 ### 线程同步
+* 互斥锁
+```c
+    //头文件
+    #include <pthread.h>
+    //锁的定义尽量与共享资源绑定
+    typedef struct
+    {
+        int id;
+        double balance;
+        pthread_mutex_t mutex;
+    }Account;
+    //锁的初始化
+    pthread_mutex_init(&mutex, NULL);  // 第二个参数为属性，通常设为 NULL
+    //加锁
+    pthread_mutex_lock(&mutex);  // 加锁
+    //使用 pthread_mutex_trylock 尝试加锁，如果锁已被占用，立即返回而不阻塞。
+    // 临界区代码（访问共享资源）
+    pthread_mutex_unlock(&mutex);  // 解锁
+    //销毁
+    pthread_mutex_destroy(&mutex);
+```
+* 互斥锁的属性设置
+1. 普通锁（PTHREAD_MUTEX_NORMAL）
+行为：
+不进行死锁检测。
+如果同一个线程重复加锁，会导致死锁。
+如果其他线程解锁一个未加锁的互斥锁，行为未定义。
+适用场景：一般用途，性能较高。
+
+1. 检错锁（PTHREAD_MUTEX_ERRORCHECK）
+行为：
+会检测死锁。
+如果同一个线程重复加锁，会返回错误（EDEADLK）。
+如果其他线程解锁一个未加锁的互斥锁，会返回错误（EPERM）。
+适用场景：调试阶段，帮助发现潜在的死锁问题。
+
+1. 递归锁（PTHREAD_MUTEX_RECURSIVE）
+行为：
+允许同一个线程多次加锁。
+每次加锁都需要对应次数的解锁。
+如果其他线程解锁一个未加锁的互斥锁，会返回错误（EPERM）。
+适用场景：需要递归调用的函数中。
+
+1. 默认锁（PTHREAD_MUTEX_DEFAULT）
+行为：
+实现定义的行为，通常等同于普通锁。
+适用场景：不需要特殊行为的场景。
+```c
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);  // 初始化属性
+
+    // 设置互斥锁类型为递归锁
+    pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+
+    pthread_mutex_t mutex;
+    pthread_mutex_init(&mutex, &attr);  // 使用属性初始化互斥锁
+
+    pthread_mutexattr_destroy(&attr);  // 销毁属性
+
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+
+    // 设置互斥锁为进程共享
+    pthread_mutexattr_setpshared(&attr, PTHREAD_PROCESS_SHARED);
+
+    pthread_mutex_t mutex;
+    pthread_mutex_init(&mutex, &attr);
+
+    pthread_mutexattr_destroy(&attr);
+```
+
+### 线程与信号
+
+1. 线程与信号的关系：在多线程程序中，信号的处理变得更加复杂。每个线程都有自己的信号掩码（signal mask），用于决定哪些信号会被阻塞（即不会被传递）。
+
+1. 信号的传递目标：在多线程环境中，信号可以发送给整个进程，也可以发送给特定的线程。具体取决于信号的类型和发送方式：
+
+1. 进程信号：某些信号（如SIGTERM、SIGKILL）是发送给整个进程的，所有线程都会受到影响。
+
+1. 线程信号：某些信号（如SIGSEGV、SIGFPE）是发送给特定线程的，通常是由于该线程执行了非法操作（如访问无效内存或除以零）。
+
+1. 信号处理函数：在多线程程序中，信号处理函数是进程级别的，即所有线程共享同一个信号处理函数。因此，信号处理函数必须是线程安全的。
+
+```c
+//在子线程中修改信号处理方式
+    if(signal(SIGALRM, signal_func) == SIG_ERR)
+    {
+        perror("signal");
+        exit(1);
+    }
+
+//信号处理函数
+void signal_func(int signo)
+{
+    printf("%lx thread is running by signal_func!\n", pthread_self());
+    if(signo == SIGALRM)
+    {
+        printf("timeout!\n");
+        alarm(2);
+    }
+}
+```
+
+* 线程可以屏蔽信号
+```c
+    //设置要屏蔽的信号集
+    sigset_t set;
+    //信号集置空
+    sigemptyset(&set);
+    //像信号集中添加信号
+    sigaddset(&set, SIGALRM);
+    //屏蔽信号集中的信号
+    pthread_sigmask(SIG_SETMASK, &set, NULL);
+```
