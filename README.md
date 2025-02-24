@@ -636,3 +636,49 @@ void signal_func(int signo)
     //屏蔽信号集中的信号
     pthread_sigmask(SIG_SETMASK, &set, NULL);
 ```
+
+# C++复习
+## 基础语法
+### 封装
+### 继承
+### 多态
+* 多态能让不同的对象对同一消息做出不同的响应。多态分为编译时多态（静态多态）和运行时多态（动态多态）  
+1. 静态多态，在编译时就能够确定要调用的函数，主要通过函数重载和运算符重载来实现  
+```c++
+    /*
+        函数重载指的是在同一个作用域内定义多个同名函数，但它们的参数列表不同（参数个数、类型或顺序不同）。编译器会根据调用时传递的实参来决定调用哪个函数。
+    */
+   #include <iostream>
+
+    class Calculator {
+    public:
+        // 重载加法函数，处理两个整数相加
+        int add(int a, int b) {
+            return a + b;
+        }
+
+        // 重载加法函数，处理两个双精度浮点数相加
+        double add(double a, double b) {
+            return a + b;
+        }
+    };
+
+    int main() {
+        Calculator calc;
+        int intResult = calc.add(3, 5);
+        double doubleResult = calc.add(3.2, 5.7);
+
+        std::cout << "Integer addition result: " << intResult << std::endl;
+        std::cout << "Double addition result: " << doubleResult << std::endl;
+
+        return 0;
+    }
+```
+
+2. 动态多态，运行时多态借助虚函数和继承来实现，在程序运行时才确定要调用的函数。这需要满足以下条件：
+> 存在继承关系。
+> 基类中定义虚函数，派生类重写该虚函数。
+> 通过基类指针或引用调用虚函数。
+```c++
+
+```
