@@ -1,0 +1,3 @@
+/home/siyuan/ARM_Linux/cpp_linux/address_book/build/CMakeFiles/AddressBookProject.dir
+/home/siyuan/ARM_Linux/cpp_linux/address_book/build/CMakeFiles/edit_cache.dir
+/home/siyuan/ARM_Linux/cpp_linux/address_book/build/CMakeFiles/rebuild_cache.dir
