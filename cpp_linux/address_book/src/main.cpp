@@ -1,7 +1,11 @@
 #include <iostream>
+#include <limits>
+#include <cstdlib>
 #include "operation.h"
 #include "friend.h"
 using namespace std;
+
+void showMenu();
 
 int main(int argc, char const *argv[])
 {
@@ -15,27 +19,18 @@ int main(int argc, char const *argv[])
     {
         cerr << e.what() << endl;
     }
-    //打印已有的通讯录信息
-    for(auto contact:contacts)
-    {
-        cout << contact.second.getName() << ": "
-        << contact.second.getPhone() << ", "
-        << contact.second.getAddress() << endl;
-    }
-    //向通讯录中添加好友信息
+    
     int choice;
     do
     {
-        cout << "通讯录工具" << endl;
-        cout << "1、添加好友" << endl;
-        cout << "2、删除好友" << endl;
-        cout << "3、修改信息" << endl;
-        cout << "4、查找信息" << endl;
-        cout << "5、保存信息" << endl;
-        cout << "6、重新加载" << endl;
-        cout << "7、保存退出" << endl;
+        showMenu();
         cout << "请选择操作: " << "\n" << ">";
-        cin >> choice;
+        if (!(cin >> choice))
+        {
+            cin.clear();  // 清除错误状态
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');  // 忽略无效输入
+            continue;
+        }
         switch(choice)
         {
             case 1:
@@ -45,7 +40,7 @@ int main(int argc, char const *argv[])
                 deleteContacts(contacts);
                 break;
             case 3:
-
+                modifyContacts(contacts);
                 break;
             case 4:
                 searchContacts(contacts);
@@ -61,9 +56,9 @@ int main(int argc, char const *argv[])
                 }
                 break;
             case 6:
+                showFriends(contacts);
                 break;
             case 7:
-                saveContacts(contacts);
                 try
                 {
                     saveContacts(contacts);
@@ -79,9 +74,24 @@ int main(int argc, char const *argv[])
                 cout << "输入错误，请重新输入！" << endl;
                 break;
 
-        } 
+        }
     }
     while (choice != 7);
 
     return 0;
+}
+
+
+void showMenu()
+{
+    system("clear");
+
+    cout << "通讯录工具" << endl;
+    cout << "1、添加好友" << endl;
+    cout << "2、删除好友" << endl;
+    cout << "3、修改信息" << endl;
+    cout << "4、查找信息" << endl;
+    cout << "5、保存信息" << endl;
+    cout << "6、显示全部联系人" << endl;
+    cout << "7、保存退出" << endl;
 }

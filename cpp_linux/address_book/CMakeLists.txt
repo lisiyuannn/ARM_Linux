@@ -19,3 +19,10 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 
 # 生成可执行文件
 add_executable(${PROJECT_NAME} ${SOURCES})
+
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+
+# 设置调试标志
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")

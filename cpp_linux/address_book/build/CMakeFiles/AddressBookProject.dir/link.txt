@@ -1,1 +1,1 @@
-/usr/bin/c++ CMakeFiles/AddressBookProject.dir/src/friend.cpp.o CMakeFiles/AddressBookProject.dir/src/main.cpp.o CMakeFiles/AddressBookProject.dir/src/operation.cpp.o -o /home/siyuan/ARM_Linux/cpp_linux/address_book/bin/AddressBookProject 
+/usr/bin/c++ -g -g CMakeFiles/AddressBookProject.dir/src/friend.cpp.o CMakeFiles/AddressBookProject.dir/src/main.cpp.o CMakeFiles/AddressBookProject.dir/src/operation.cpp.o -o /home/siyuan/ARM_Linux/cpp_linux/address_book/bin/AddressBookProject 

@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/siyuan/ARM_Linux/cpp_linux/address_book/include
 
-CXX_FLAGS = -std=gnu++11
+CXX_FLAGS = -g -g -std=gnu++11
 

@@ -48,4 +48,18 @@ void deleteContacts(map<string, Friend>&);
  */
 void searchContacts(map<string, Friend>&);
 
+/**
+ * brief: 显示所有联系人
+ * arg: 通信录map
+ * return: none
+ */
+void showFriends(map<string, Friend>&);
+
+/**
+ * brief: 修改联系人
+ * arg: 通信录map
+ * return: none
+ */
+void modifyContacts(map<string, Friend>&);
+
 #endif
