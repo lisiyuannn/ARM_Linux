@@ -5,6 +5,7 @@
 #include "wiringPi.h"
 #include <iostream>
 #include <pthread.h>
+#include <unistd.h>
 
 class Pwm
 {
@@ -30,8 +31,8 @@ public:
         digitalWrite(pin, LOW);
     }
 
-    setFreq(int freq) {this->freq = freq;}
-    setDutyCycle(int dutyCycle) {this->dutyCycle = dutyCycle;}
+    void setFreq(int freq) {this->freq = freq;}
+    void setDutyCycle(int dutyCycle) {this->dutyCycle = dutyCycle;}
 
     void startPwm()
     {
@@ -56,10 +57,24 @@ public:
     /* pwm线程调用函数,static函数属于类而不属于线程 */
     static void* pwmPthread(void* arg)
     {
-        while(pwmFlag)
+        //参数
+        Pwm* pwm = (Pwm*)arg;
+
+        while(pwm->pwmFlag)
         {
+            /**
+             * 根据频率和占空比计算高电平和低电平的持续时间
+             * 高电平持续时间 = 1000000 / hz * x / 100
+             * 低电平持续时间 = 1000000 / hz * (100-x) / 100
+             */
+
             /* 执行pwm发射程序 */
+            digitalWrite(pwm->pin, HIGH);     //高电平
+            usleep(10000/pwm->freq*pwm->dutyCycle);   //睡眠一段时间
+            digitalWrite(pwm->pin, LOW);     //低电平
+            usleep(10000/pwm->freq*(100-pwm->dutyCycle));
         }
+        return (void*)0;
     }
 };
 
@@ -67,6 +82,14 @@ public:
 int main(int argc, char const *argv[])
 {
 /* code */
-return 0;
+    wiringPiSetupGpio();
+
+    Pwm pwm1(18);
+    pwm1.startPwm();
+    sleep(5);
+    pwm1.stopPwm();
+
+    while(1){};
+    return 0;
 }
  
