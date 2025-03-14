@@ -13,7 +13,7 @@ int main()
 	char buffer[100];	//读数据缓存
 	pid_t pid;
 
-	if(pipe(pipefd) < 0)
+	if(pipe(pipefd) < 0)  //创建管道
 	{
 		exit(-1);
 	}
