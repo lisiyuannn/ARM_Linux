@@ -853,3 +853,11 @@ int main(int argc, char const *argv[])
 * ostringstream类支持输出到字符串  
 
 ### 输入流类
+
+
+# linux内核学习
+### linux内核配置与编译
+### linux内核模块开发
+
+## Bootloader和UBoot
+### 交叉工具链
